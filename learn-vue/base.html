@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <style>
+    .tab button {
+      float: left
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <input type="file">
+    <div> {{ message }}～</div>
+    <div :title="title">鼠标悬浮看看～</div>
+    <div v-if="show">试着在console里输入app.show=false~</div>
+    <div>这是个循环: 试着输入app.todo.push({text: '学习一切'})</div>
+    <ol>
+      <todo-item
+        v-for="item in todo"
+        :todo="item"
+        :key="item.id"
+        ></todo-item>
+    </ol>
+    <button @click="reverseMessage">逆转信息</button>
+
+    <input type="text" v-model="message">
+
+    <div :style="{ fontSize: postFontSize + 'em' }">
+      <blog-post
+      v-for="post in posts"
+      :key="post.id"
+      :post="post"
+      @enlarge-text="onEnlargeText"
+      ></blog-post>
+    </div>
+
+    <h4>自定义组件使用v-model</h4>
+    <custom-input v-model="searchText"></custom-input>
+    <p>{{ searchText }}</p>
+
+    <alert-box>注入灵魂</alert-box>
+
+    <div class="tab">
+      <h3>尝试使用一下is特性</h3>
+      <div
+        class="tab-select"
+        v-for="(component, index) in tabComponent"
+        :key="index">
+        <button @click="currentTabComponent = component">{{ component }}</button>
+      </div>
+      <component :is="currentTabComponent"></component>
+    </div>
+
+    <div>
+      <h4>作用域插槽</h4>
+      <todo-list :todos="todos">
+        <template slot-scope="{ todo }">
+          <span v-if="todo.isComplete">✓</span>
+          {{ todo.text }}
+        </template>
+      </todo-list>
+    </div>
+  </div>
+
+  <script>
+    // 基础组件
+    Vue.component('todo-item', {
+      props: ['todo'],
+      name: 'todo-item',
+      template: '<li>{{ todo.text }}</li>'
+    })
+
+    // 父子组件数据的传递
+    Vue.component('blog-post', {
+      props: ['post'],
+      name: 'blog-post',
+      template:`
+        <div class="blog-post">
+          <h3>{{ post.title }}</h3>
+          <button @click="$emit('enlarge-text', 0.1)">
+            Enlarge text
+          </button>
+          <div v-html="post.content"></div>
+        </div>
+      `
+    })
+
+    // 组件使用v-model
+    Vue.component('custom-input', {
+      props: ['value'],
+      name: 'custom-input',
+      template: `
+      <input
+        :value="value"
+        @input="$emit('input', $event.target.value)"
+      >`
+    })
+
+    // 通过插槽分发内容
+    Vue.component('alert-box', {
+      name: 'alert-box',
+      template: `
+      <div class="alert-box">
+        <h3>Error</h3>
+        <slot></slot>
+      </div>
+      `
+    })
+
+    // 作用域插槽
+    Vue.component('todo-list', {
+      props: {
+        todos: Array
+      },
+      template: `
+      <ul>
+        <li
+          v-for="todo in todos"
+          :key="todo.id"
+        >
+          <slot :todo="todo">
+            {{ todo.text }}
+          </slot>
+        </li>
+      </ul>
+      `
+    })
+
+    var app = new Vue({
+      el: '#app',
+      data: {
+        message: 'Hello world',
+        title: '哈哈哈哈',
+        show: true,
+        todo: [
+          { id: 0, text: '学习vue' },
+          { id: 1, text: '学习node' },
+          { id: 2, text: '学习webpack' }
+        ],
+        todos: [
+          { id: 0, text: '学习vue', isComplete: true },
+          { id: 1, text: '学习node', isComplete: true },
+          { id: 2, text: '学习webpack', isComplete: false }
+        ],
+        posts: [
+          { id: 0, title: '搞事', content: 'svsdvd' },
+          { id: 1, title: '啊', content: '脸滚键盘输入法' },
+          { id: 2, title: '啥', content: '脸滚键盘起名法' },
+        ],
+        postFontSize: 1,
+        searchText: '请输入值',
+        tabComponent: ['custom-input', 'alert-box'],
+        currentTabComponent: 'custom-input'
+      },
+      methods: {
+        reverseMessage: function() {
+          this.message = this.message.split('').reverse().join('')
+        },
+        onEnlargeText: function(enlargeAmount) {
+          this.postFontSize += enlargeAmount
+        }
+      }
+    })
+  </script>
+</body>
+</html>

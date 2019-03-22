@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var salesOffices = {}; // 发布者
+
+    salesOffices.clientList = []; // 缓存列表
+
+    salesOffices.listen = function(key, fn) { // 增加订阅者
+      if(!this.clientList[key]) { // 如果还没有订阅过此类消息，给该类消息创建一个缓存列表
+        this.clientList[key] = [];
+      }
+      this.clientList[key].push(fn); // 订阅的消息添加进缓存队列
+    };
+
+    salesOffices.trigger = function() { // 发布消息
+      var key = Array.prototype.shift.call(arguments),
+          fns = this.clientList[key];
+
+      if(!fns || fns.length === 0) { // 如果没有订阅该消息，则返回
+        return false;
+      }
+      for(var i = 0, fn; fn = fns[i++];) {
+        fn.apply(this, arguments); // 发布消息时带上的参数
+      }
+    };
+
+    salesOffices.listen('squareMeter88', function(price) { // 订阅者1号
+      console.log('价格= ' + price);
+    });
+
+    salesOffices.listen('squareMeter110', function(price, squareMeter) { // 订阅者2号
+      console.log('价格= ' + price);
+    });
+
+    salesOffices.trigger('squareMeter88', 2000000);
+    salesOffices.trigger('squareMeter110', 3000000);
+  </script>
+</body>
+</html>

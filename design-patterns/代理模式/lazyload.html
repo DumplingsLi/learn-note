@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // miniConsole代理对象
+    var miniConsole = (function() {
+      var cache = [];
+      var handler = function(ev) {
+        if(ev.keyCode === 113) {
+          var script = document.createElement('script');
+          script.onload = function() {
+            for(var i = 0, fn; fn = cache[i++];) {
+              fn();
+            }
+          };
+          script.src = 'miniConsole.js';
+          document.getElementsByTagName('head')[0].appendChild(script);
+          document.removeEventListener('keydown', handler);
+        }
+      }
+      document.addEventListener('keydown', handler, false); // false冒泡，true捕获
+
+      return {
+        log: function() {
+          var args = arguments;
+          // 缓存队列
+          cache.push(function() {
+            return miniConsole.log.apply(miniConsole, args);
+          });
+        }
+      }
+    })();
+
+    miniConsole.log(11);
+
+    //real miniConsole.js
+    var miniConsole = {
+      log: function() {
+        // pass
+        console.log(Array.prototype.join.call(arguments));
+      }
+    }
+  </script>
+</body>
+</html>

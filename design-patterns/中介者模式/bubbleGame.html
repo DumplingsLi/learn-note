@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function Player(name, teamColor) {
+      this.partners = [];
+      this.enemies = [];
+      this.state = 'alive';
+      this.name = name;
+      this.teamColor = teamColor;
+    }
+
+    Player.prototype.win = function() {
+      console.log('winner: ' + this.name);
+    }
+
+    Player.prototype.lose = function() {
+      console.log('loser: ' + this.name)
+    }
+
+    Player.prototype.die = function() {
+      var all_dead = true;
+      this.state = 'dead';
+
+      for(var i = 0, partner; partner = this.partners[i++];) {
+        if(partner.state !== 'dead') {
+          all_dead = false;
+          break;
+        }
+      }
+
+      if(all_dead) {
+        this.lose();
+        for(var i = 0, partner; partner = this.partners[i++];) {
+          partner.lose();
+        }
+        for(var i = 0, enemy; enemy = this.enemies[i++];) {
+          enemy.win();
+        }
+      }
+    }
+
+    var players = [];
+
+    var playerFactory = function(name, teamColor) {
+      var newPlayer = new Player(name, teamColor);
+
+      for(var i = 0, player; player = players[i++];) {
+        if(newPlayer.teamColor === player.teamColor) {
+          player.partners.push(newPlayer);
+          newPlayer.partners.push(player);
+        }else {
+          player.enemies.push(newPlayer);
+          newPlayer.enemies.push(player);
+        }
+      }
+
+      players.push(newPlayer);
+
+      return newPlayer;
+    }
+
+    var player1 = playerFactory('a', 'red'),
+        player2 = playerFactory('b', 'red'),
+        player3 = playerFactory('c', 'red'),
+        player4 = playerFactory('d', 'red');
+
+    var player5 = playerFactory('1', 'blue'),
+        player6 = playerFactory('2', 'blue'),
+        player7 = playerFactory('3', 'blue'),
+        player8 = playerFactory('4', 'blue');
+
+    player1.die();
+    player2.die();
+    player3.die();
+    player4.die();
+  </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div id="demo">
+      <div class="demo">
+        <button @click="show1 = !show1">Toggle render</button>
+        <transition name="fade">
+          <div class="cube" v-if="show1"></div>
+        </transition>
+      </div>
+
+      <div class="demo">
+        <button @click="show2 = !show2">Toggle render</button>
+        <transition name="slide-fade">
+          <div class="cube" v-if="show2"></div>
+        </transition>
+      </div>
+
+      <div class="demo">
+        <button @click="show3 = !show3">Toggle render</button>
+        <transition name="bounce">
+          <div class="cube" v-if="show3"></div>
+        </transition>
+      </div>
+
+      <div class="demo">
+        <button @click="show4 = !show4">Toggle render</button>
+        <transition
+          name="custom-classes-transiton"
+          enter-active-class="animated tada"
+          leave-active-class="animated shake"
+        >
+          <div class="cube" v-if="show4"></div>
+        </transition>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#demo',
+      data: {
+        show1: true,
+        show2: true,
+        show3: true,
+        show4: true
+      }
+    })
+  </script>
+</body>
+</html>

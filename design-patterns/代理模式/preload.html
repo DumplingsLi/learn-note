@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var myImage = (function() {
+      var imgNode = document.createElement('img');
+      document.body.appendChild(imgNode);
+
+      return {
+        setSrc: function(src) {
+          imgNode.src = src;
+        }
+      }
+    })();
+
+    var proxyImg = (function() {
+      var img = new Image;
+      img.onload = function() {
+        myImage.setSrc(this.src);
+      }
+
+      return {
+        setSrc: function(src) {
+          myImage.setSrc('loading.jpg');
+          img.src = src;
+        }
+      }
+    })();
+
+    proxyImg.setSrc('http://b221.photo.store.qq.com/psb?/V1412KZ115JC7T/iRADd30sGmX*vGHetdLpyMJePbSvRgSxmWq3I5pbF*0!/b/dN0AAAAAAAAA&bo=OASgBQAAAAARF7k!&rf=viewer_4');
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var each = function(ary, callback) {
+      for( var i = 0; i < ary.length; i++) {
+        callback.call(ary[i], i, ary[i]);
+      }
+    };
+
+    each([1, 2, 3], function(i, n) {
+      console.log(i, n);
+    })
+
+    // 内部迭代器
+    var compare = function(ary1, ary2) {
+      if(ary1.length !== ary2.length) {
+        throw new Error('两个数组不相等');
+      }
+      each(ary1, function(i, n) {
+        if(n !== ary2[i]) {
+          throw new Error('两个数组不相等');
+        }
+      })
+      console.log('两个数组相等');
+    }
+
+    compare([1, 2, 3], [1, 2, 3]);
+  </script>
+</body>
+</html>

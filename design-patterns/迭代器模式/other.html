@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 倒序迭代器
+    var reverseEach = function(ary, callback) {
+      for( var i = ary.length - 1; i >= 0; i--) {
+        callback.call(ary[i], i, ary[i]);
+      }
+    };
+
+    reverseEach([1, 2, 3], function(i, n) {
+      console.log(i, n);
+    })
+
+    // 中止迭代器
+    var each = function(ary, callback) {
+      for( var i = 0; i < ary.length; i++) {
+        if(callback(i, ary[i]) === false) {
+          break;
+        }
+      }
+    };
+
+    each([1, 2, 3, 4, 5], function(i, n) {
+      if( n > 3) {
+        return false;
+      }
+      console.log(i, n);
+    })
+  </script>
+</body>
+</html>
